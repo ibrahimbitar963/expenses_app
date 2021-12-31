@@ -10,24 +10,23 @@ TransactionList(this.transactions,this.deletetx);
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      height:400,
-
-      child: transactions.isEmpty? 
-          Column(
+    return   transactions.isEmpty
+        ? LayoutBuilder(builder:(context,constraints) {
+          return Column(
             children: [
               Text('No transaction added yet'
                 , style: Theme.of(context).textTheme.title,
               ),
               SizedBox(height: 20,),
               Container(
-                height: 200,
+                height: constraints.maxHeight *0.6,
                 child: Image.asset('assets/images/waiting.png',
-                fit: BoxFit.cover,),
+                  fit: BoxFit.cover,),
               ),
             ],
-          )
+          );
 
+    })
           : ListView.builder(
         itemBuilder: (context , int index){
          return Card(
@@ -52,7 +51,13 @@ TransactionList(this.transactions,this.deletetx);
              subtitle: Text(
              DateFormat.yMMMd().format(transactions[index].date) ,
              ),
-           trailing:IconButton(icon:Icon(Icons.delete,
+           trailing:  MediaQuery.of(context).size.width > 360 ?
+               TextButton.icon(onPressed: ()=>deletetx(transactions[index].id),
+                   icon: Icon(Icons.delete,color:Theme.of(context).errorColor ,),
+                   label: Text('delete',style: TextStyle(
+                      color:Theme.of(context).errorColor ,
+                   ),))
+           :IconButton(icon:Icon(Icons.delete,
              color:Theme.of(context).errorColor ,) ,
              onPressed: ()=>deletetx(transactions[index].id),
 
@@ -62,7 +67,7 @@ TransactionList(this.transactions,this.deletetx);
         },
         itemCount:transactions.length ,
 
-        ),
-    );
-  }
+
+
+    );}
 }
